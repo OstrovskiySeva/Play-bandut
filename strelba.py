@@ -342,15 +342,11 @@ class Play:
             for i in range(0, len(self.level_copy["polica"])):
                 if (x, y) == self.level_copy["polica"][i]:
                     self.dir_pol, self.hp_pol = self.level_copy["dop_polica"][i]
+                    if self.hp_pol >0:
+                        self.bullets.remove(bullet)
                     self.hp_pol -= 5
                     self.level_copy["dop_polica"].pop(i)
                     self.level_copy["dop_polica"].insert(i, (self.dir_pol, self.hp_pol))
-            if (x, y) in self.level_copy["polica"]:
-                self.bullets.remove(bullet)
-                if self.HP_polica > 0:
-                    self.HP_polica -= 3
-                elif self.HP_polica <= 0:
-                    self.defeat_polica = True
                     
 
         for pol_bullet in self.pol_bullets:
