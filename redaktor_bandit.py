@@ -1,9 +1,9 @@
 import pygame
 import random
 
-TILE = 100
+TILE = 50
 WIDTH = 1200
-HEIGHT = 1200
+HEIGHT = 960
 FPS = 60
 
 world = [ ]
@@ -20,7 +20,7 @@ def levels_play():
 
 def saves(world, level):
     with open('level/level.txt', 'a') as file:
-        file.write("\nLEVEL")
+        file.write("\nLEVEL ")
         file.write(str(int(level)+1))
         file.write("\n")
         for line in world:
@@ -28,15 +28,15 @@ def saves(world, level):
             lines = "".join(str_line)
             file.write(lines)
             file.write("\n")
-        file.write("\n p: 1,2 \n")
-        file.write("\nEND LEVEL") 
+        file.write("\np: 1,2 \n")
+        file.write("\nEND LEVEL")
 
 for i in range(0, WIDTH, TILE):
     line = []
     for j in range(0, HEIGHT, TILE):
         line.append(0)
     world.append(line)
-
+    
 running = True
 
 pygame.init()
@@ -47,26 +47,32 @@ clock = pygame.time.Clock()
 while running:
     for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.running = False
+                running = False
                 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        mouse_x, mouse_y = event.pos[1], event.pos[0]
-                        Row, Col = mouse_x // TILE, mouse_y // TILE
-                        world[Row][Col] = cell
-                    elif event.button == 3:
-                        mouse_x, mouse_y = event.pos[1], event.pos[0]
-                        Row, Col = mouse_x // TILE, mouse_y // TILE
-                        world[Row][Col] = 0
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     cell = 1
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_2:
                     cell = "#"
-                elif event.key == pygame.K_LSHIFT:
+                elif event.key == pygame.K_s:
                     level = levels_play()
                     saves(world, level)
-    
+                elif event.key == pygame.K_3:
+                    cell = "-"
+                elif event.key == pygame.K_4:
+                    cell = "X"
+
+    b1, _, b3 = pygame.mouse.get_pressed()
+    if b1 == 1:
+        pressed = pygame.mouse.get_pos()
+        mouse_x, mouse_y = pressed
+        Row, Col = mouse_x // TILE, mouse_y // TILE
+        world[Col][Row] = cell
+    elif b3 == 1:
+        pressed = pygame.mouse.get_pos()
+        mouse_x, mouse_y = pressed
+        Row, Col = mouse_x // TILE, mouse_y // TILE
+        world[Col][Row] = 0
     
     screen.fill((0, 0, 0))
     
@@ -81,7 +87,12 @@ while running:
                 pygame.draw.rect(screen, (122, 122, 122), rects, 1)
             elif world[i][j] == "#":
                 pygame.draw.rect(screen, (255, 0, 0), rects)
-            
+            elif world[i][j] == "-":
+                pygame.draw.rect(screen, (0, 255, 0), rects)
+            elif world[i][j] == "X":
+                pygame.draw.rect(screen, (0, 0, 255), rects)
     
     pygame.display.update()
     clock.tick(FPS)
+    
+pygame.quit()
